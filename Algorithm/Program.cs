@@ -1,6 +1,7 @@
 ﻿using Algorithm.Code;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ namespace Algorithm
     {
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             ItemSets set = new ItemSets();
             set.CreateFrequentItemSet(new ItemSet(1, new List<string>() { "Bread", "Milk", "Egg" }));
             set.CreateFrequentItemSet(new ItemSet(2, new List<string>() { "Bread", "Coca", "Egg", "Candy" }));
@@ -22,7 +24,10 @@ namespace Algorithm
             //Trainin paramaters (set, support(eşik), trust(eşik))
             Apriori apriori = new Apriori(set, 60, 75);
             apriori.Train();
+            stopwatch.Stop();
 
+            // In thời gian thực hiện
+            Console.WriteLine($"Program running time: {stopwatch.Elapsed}");
             Console.Read();
         }
     }
