@@ -1,4 +1,5 @@
 ﻿using Algorithm.Code;
+using Algorithm.FPGrowthAlgorithm;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,22 +13,45 @@ namespace Algorithm
     {
         static void Main(string[] args)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            Stopwatch AprioriTime = Stopwatch.StartNew();
             ItemSets set = new ItemSets();
-            set.CreateFrequentItemSet(new ItemSet(1, new List<string>() { "Bread", "Milk", "Egg" }));
-            set.CreateFrequentItemSet(new ItemSet(2, new List<string>() { "Bread", "Coca", "Egg", "Candy" }));
-            set.CreateFrequentItemSet(new ItemSet(3, new List<string>() { "Coca", "Egg", "Milk", "Bread", "Candy" }));
-            set.CreateFrequentItemSet(new ItemSet(4, new List<string>() { "Coca", "Egg", "Candy" }));
-            set.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "Egg", "Bread", "Milk", "Candy" }));
+            set.CreateFrequentItemSet(new ItemSet(1, new List<string>() { "A", "B", "C","D" }));
+            set.CreateFrequentItemSet(new ItemSet(2, new List<string>() { "A", "B", "D", "E" }));
+            set.CreateFrequentItemSet(new ItemSet(3, new List<string>() { "A", "C", "E" }));
+            set.CreateFrequentItemSet(new ItemSet(4, new List<string>() { "A", "C", "D","E" }));
+            set.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A", "B", "C", "D","E" }));
+            set.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A",  "C", "D", "E" }));
             set.Lock();
 
             //Trainin paramaters (set, support(eşik), trust(eşik))
             Apriori apriori = new Apriori(set, 60, 75);
+            
             apriori.Train();
-            stopwatch.Stop();
+            
+            
+            AprioriTime.Stop();
 
             // In thời gian thực hiện
-            Console.WriteLine($"Program running time: {stopwatch.Elapsed}");
+            Console.WriteLine($"Apriori Algorithm running time: {AprioriTime.Elapsed}");
+            Stopwatch FPGrowthTime = Stopwatch.StartNew();
+            Console.WriteLine("---------------------------------------------------------------------------------------------" +
+                "\n---------------------------------------------------------------------------------------------\n" +
+                "---------------------------------------------------------------------------------------------\n" +
+                "---------------------------------------------------------------------------------------------");
+            Console.WriteLine("\n\nFPGrowth");
+            ItemSets FPData = new ItemSets();
+            FPData.CreateFrequentItemSet(new ItemSet(1, new List<string>() { "A", "B", "C", "D" }));
+            FPData.CreateFrequentItemSet(new ItemSet(2, new List<string>() { "A", "B", "D", "E" }));
+            FPData.CreateFrequentItemSet(new ItemSet(3, new List<string>() { "A", "C", "E" }));
+            FPData.CreateFrequentItemSet(new ItemSet(4, new List<string>() { "A", "C", "D", "E" }));
+            FPData.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A", "B", "C", "D", "E" }));
+            FPData.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A", "C", "D", "E" }));
+            FPData.Lock();
+            FPGrowth fpgrowth = new FPGrowth(FPData, 60, 75);
+            fpgrowth.RunAlgorithm(FPData);
+            fpgrowth.PrintTree();
+            FPGrowthTime.Stop();
+            Console.WriteLine($"FP-Growth Algorithm running time: {FPGrowthTime.Elapsed}");
             Console.Read();
         }
     }

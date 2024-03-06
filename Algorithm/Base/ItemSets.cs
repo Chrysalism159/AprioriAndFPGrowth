@@ -41,6 +41,7 @@ namespace Algorithm.Code
         {
             this.check = false;
         }
+
     }
    
 }

@@ -14,35 +14,13 @@ namespace Algorithm
         private int support;
         private int confidence;
         private int min_support;
+
+
         public Apriori(ItemSets itemSets, int support, int confidence) {
             this.ItemSet = itemSets;
             this.support = support > 100 ? 100 : (support < 0 ? 0 : support);
             this.confidence = confidence > 100 ? 100 : (confidence < 0 ? 0 : confidence);
             this.min_support = this.ItemSet.ListProduct.Count * support / 100;
-        }
-        public Dictionary<string, int> CountNumberOfItem()
-        {
-            Dictionary<string, int> value = new Dictionary<string, int>();
-            for(int i=0;i<this.ItemSet.ListProduct.Count;i++)
-            {
-                for(int j = 0; j < this.ItemSet.ListProduct[i].Items.Count; j++)
-                {
-                    string product = ItemSet.ListProduct[i].Items[j];
-                    if(value.ContainsKey(product))
-                        value[product]++;
-                    else
-                        value.Add(product, 1);
-                }
-            }
-            return value;
-        }
-        public Dictionary<string, int> RemoveValueLowerMinSup(Dictionary<string, int> products)
-        {
-            return products.Where(pair => pair.Value >= this.min_support).ToDictionary(pair => pair.Key, pair => pair.Value);
-        }
-        public Dictionary<string[], int> RemoveValueLowerMinSup(Dictionary<string[], int> products)
-        {
-            return products.Where(pair => pair.Value >= this.min_support).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
         public int GetGroupCountInItemSets(string[] group)
         {
@@ -56,20 +34,45 @@ namespace Algorithm
             }
             return temp;
         }
+        public Dictionary<string, int> CountNumberOfItem()
+        {
+            Dictionary<string, int> value = new Dictionary<string, int>();
+            for (int i = 0; i < this.ItemSet.ListProduct.Count; i++)
+            {
+                for (int j = 0; j < this.ItemSet.ListProduct[i].Items.Count; j++)
+                {
+                    string product = ItemSet.ListProduct[i].Items[j];
+                    if (value.ContainsKey(product))
+                        value[product]++;
+                    else
+                        value.Add(product, 1);
+                }
+            }
+            return value;
+        }
+        public Dictionary<string, int> RemoveValueLowerMinSup(Dictionary<string, int> products, int min_support)
+        {
+            return products.Where(pair => pair.Value >= min_support).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+        public Dictionary<string[], int> RemoveValueLowerMinSup(Dictionary<string[], int> products, int min_support)
+        {
+            return products.Where(pair => pair.Value >= min_support).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
         public Dictionary<string[], int> GroupProduct(Dictionary<string, int> products)
         {
             Dictionary<string[], int> value = new Dictionary<string[], int>();
-            foreach(KeyValuePair<string, int> main in products)
+            foreach (KeyValuePair<string, int> main in products)
             {
                 string mainKey = main.Key;
-                foreach(KeyValuePair<string, int> sub in products)
+                foreach (KeyValuePair<string, int> sub in products)
                 {
                     string subKey = sub.Key;
-                    if(!mainKey.Equals(subKey))
+                    if (!mainKey.Equals(subKey))
                     {
-                        string[] group1 = new string[] {mainKey, subKey };
+                        string[] group1 = new string[] { mainKey, subKey };
                         string[] group2 = group1.Reverse().ToArray();
-                        if(!value.ContainsKey(group1) && !value.ContainsKey(group2))
+                        if (!value.ContainsKey(group1) && !value.ContainsKey(group2))
                         {
                             value.Add(group1, GetGroupCountInItemSets(group1));
                         }
@@ -102,7 +105,7 @@ namespace Algorithm
             }
             Console.WriteLine("---------------------------------------------------------------------------------------------");
         }
-        private void PrintFinalValues(Dictionary<string[], int> group)
+        public void PrintFinalValues(Dictionary<string[], int> group)
         {
 
             Console.WriteLine("---------------------------------------------------------------------------------------------");
@@ -143,7 +146,7 @@ namespace Algorithm
             Console.WriteLine("---------------------------------------------------------------------------------------------");
         }
 
-        private void PrintThresholdRule(string[] keys, string[] ins, string[] outs)
+        public void PrintThresholdRule(string[] keys, string[] ins, string[] outs)
         {
             int XYZ = GetGroupCountInItemSets(keys);
             int N = GetGroupCountInItemSets(ins);
@@ -152,7 +155,7 @@ namespace Algorithm
             Console.Write($"The probability of being [{string.Join(",", outs)}] on the product set [{string.Join(",", ins)}] \t%{result}");
         }
 
-        private Dictionary<string[], int> MergeGroupProducts(Dictionary<string[], int> grouped)
+        public Dictionary<string[], int> MergeGroupProducts(Dictionary<string[], int> grouped)
         {
             Dictionary<string[], int> temp = new Dictionary<string[], int>(new ArrayComparer());
             List<string> datas = new List<string>();
@@ -170,6 +173,7 @@ namespace Algorithm
             temp.Add(datas.ToArray(), GetGroupCountInItemSets(datas.ToArray()));
             return temp;
         }
+
         public void Train()
         {
             Dictionary<string, int> productCounts = this.CountNumberOfItem();
@@ -179,17 +183,18 @@ namespace Algorithm
             Console.WriteLine();
 
             this.PrintCounts(productCounts, "Support Values");
-            productCounts = this.RemoveValueLowerMinSup(productCounts);
+            productCounts = this.RemoveValueLowerMinSup(productCounts, this.min_support);
             this.PrintCounts(productCounts, "Products with equal to or greater than the threshold support value");
 
             Dictionary<string[], int> grouped = this.GroupProduct(productCounts);
             this.PrintGroups(grouped, "Support values for dual product groups");
-            grouped = this.RemoveValueLowerMinSup(grouped);
+            grouped = this.RemoveValueLowerMinSup(grouped, this.min_support);
             this.PrintGroups(grouped, "Two product groups with equal to or greater than the threshold support value");
             grouped = this.MergeGroupProducts(grouped);
             this.PrintGroups(grouped, "Three product groups with equal to or greater than the threshold support value");
             this.PrintFinalValues(grouped);
         }
+
     }
     public sealed class ArrayComparer : IEqualityComparer<string[]>
     {
