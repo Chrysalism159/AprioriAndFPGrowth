@@ -39,17 +39,17 @@ namespace Algorithm
                 "---------------------------------------------------------------------------------------------\n" +
                 "---------------------------------------------------------------------------------------------");
             Console.WriteLine("\n\nFPGrowth");
-            ItemSets FPData = new ItemSets();
-            FPData.CreateFrequentItemSet(new ItemSet(1, new List<string>() { "A", "B", "C", "D" }));
-            FPData.CreateFrequentItemSet(new ItemSet(2, new List<string>() { "A", "B", "D", "E" }));
-            FPData.CreateFrequentItemSet(new ItemSet(3, new List<string>() { "A", "C", "E" }));
-            FPData.CreateFrequentItemSet(new ItemSet(4, new List<string>() { "A", "C", "D", "E" }));
-            FPData.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A", "B", "C", "D", "E" }));
-            FPData.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A", "C", "D", "E" }));
-            FPData.Lock();
-            FPGrowth fpgrowth = new FPGrowth(FPData, 60, 75);
-            fpgrowth.RunAlgorithm(FPData);
-            fpgrowth.PrintTree();
+            List<List<string>> FPData = new List<List<string>>();
+            FPData.Add(new List<string>() { "A", "B", "C", "D" });
+            FPData.Add(new List<string>() { "A", "B", "D", "E" });
+            FPData.Add(new List<string>() { "A", "C", "E" });
+            FPData.Add(new List<string>() { "A", "C", "D", "E" });
+            FPData.Add(new List<string>() { "A", "B", "C", "D", "E" });
+            FPData.Add(new List<string>() { "A", "C", "D", "E" });
+            FPGrowth fpgrowth = new FPGrowth();
+            string path = @"D:\Study\KLTN";
+            fpgrowth.CreateFPTreeAndGenerateFrequentItemsets(FPData, 3, path);
+            //fpgrowth.PrintTree();
             FPGrowthTime.Stop();
             Console.WriteLine($"FP-Growth Algorithm running time: {FPGrowthTime.Elapsed}");
             Console.Read();

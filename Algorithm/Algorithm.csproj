@@ -58,6 +58,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="FPGrowthAlgorithm\FPGrowth.cs" />
+    <Compile Include="FPGrowthAlgorithm\FPTree.cs" />
+    <Compile Include="FPGrowthAlgorithm\Node.cs" />
+    <Compile Include="FPGrowthAlgorithm\Itemset.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AprioriAlgorithm\Apriori.cs" />
@@ -86,6 +89,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
