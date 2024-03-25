@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +9,14 @@ namespace Algorithm.FPGrowthAlgorithm
 {
     public class FPTree
     {
-        Node root;
+        public Node root;
         IDictionary<string, Node> headerTable;
         float minimumSupport;
         //flist
         List<Item> frequentItems;
         List<List<string>> transaction;
+        private const int Radius = 20;
+        private const int Gap = 50;
 
         public List<Item> FrequentItems
         {
@@ -141,6 +144,11 @@ namespace Algorithm.FPGrowthAlgorithm
                 }
             }
         }
+        public Node TreeRoot()
+        {
+            Node node = root;
+            return node;
+        }
         public int GetTotalSupportCount(string itemSymbol)
         {
             int sCount = 0;
@@ -171,6 +179,7 @@ namespace Algorithm.FPGrowthAlgorithm
         {
             PrintNode(root, 0);
         }
+        
         public FPTree Project(Item anItem)
         {
             FPTree tree = new FPTree();
@@ -180,7 +189,9 @@ namespace Algorithm.FPGrowthAlgorithm
 
             while (startNode != null)
             {
+                //Giá trị hỗ trợ của tập thường xuyên đang xét.
                 int projectedFPCount = startNode.FpCount;
+                Console.Write("\nSupport: " + projectedFPCount);
                 Node tempNode = startNode;
                 List<Node> aBranch = new List<Node>();
                 while (null != tempNode.Parent)

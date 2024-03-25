@@ -47,7 +47,7 @@ namespace Algorithm.FPGrowthAlgorithm
     }
     public class Itemset
     {
-        private List<Item> _itemset; //list of transactions in database
+        public List<Item> _itemset; //list of transactions in database
 
 
         private int supportCount; // support count of this item set

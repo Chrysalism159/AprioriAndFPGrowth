@@ -9,63 +9,42 @@ using System.Windows.Forms;
 
 namespace Algorithm
 {
-    class Program
+
+    internal static class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
         {
-            Stopwatch AprioriTime = Stopwatch.StartNew();
-            ItemSets set = new ItemSets();
-            set.CreateFrequentItemSet(new ItemSet(1, new List<string>() { "A", "B", "C","D" }));
-            set.CreateFrequentItemSet(new ItemSet(2, new List<string>() { "A", "B", "D", "E" }));
-            set.CreateFrequentItemSet(new ItemSet(3, new List<string>() { "A", "C", "E" }));
-            set.CreateFrequentItemSet(new ItemSet(4, new List<string>() { "A", "C", "D","E" }));
-            set.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A", "B", "C", "D","E" }));
-            set.CreateFrequentItemSet(new ItemSet(5, new List<string>() { "A",  "C", "D", "E" }));
-            set.Lock();
-
-            //Trainin paramaters (set, support(eşik), trust(eşik))
-            Apriori apriori = new Apriori(set, 60, 75);
-            
-            apriori.Train();
-            
-            
-            AprioriTime.Stop();
-
-            // In thời gian thực hiện
-            Console.WriteLine($"Apriori Algorithm running time: {AprioriTime.Elapsed}");
-            Stopwatch FPGrowthTime = Stopwatch.StartNew();
-            Console.WriteLine("---------------------------------------------------------------------------------------------" +
-                "\n---------------------------------------------------------------------------------------------\n" +
-                "---------------------------------------------------------------------------------------------\n" +
-                "---------------------------------------------------------------------------------------------");
-            Console.WriteLine("\n\nFPGrowth");
-            List<List<string>> FPData = new List<List<string>>();
-            FPData.Add(new List<string>() { "A", "B", "C", "D" });
-            FPData.Add(new List<string>() { "A", "B", "D", "E" });
-            FPData.Add(new List<string>() { "A", "C", "E" });
-            FPData.Add(new List<string>() { "A", "C", "D", "E" });
-            FPData.Add(new List<string>() { "A", "B", "C", "D", "E" });
-            FPData.Add(new List<string>() { "A", "C", "D", "E" });
-            FPGrowth fpgrowth = new FPGrowth();
-            string path = @"D:\Study\KLTN";
-            fpgrowth.CreateFPTreeAndGenerateFrequentItemsets(FPData, 3, path);
-            //fpgrowth.PrintTree();
-            FPGrowthTime.Stop();
-            Console.WriteLine($"FP-Growth Algorithm running time: {FPGrowthTime.Elapsed}");
-            Console.Read();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
         }
     }
-    //internal static class Program
+
+
+
+
+
+    //class Program
     //{
-    //    /// <summary>
-    //    /// The main entry point for the application.
-    //    /// </summary>
-    //    [STAThread]
     //    static void Main()
     //    {
-    //        Application.EnableVisualStyles();
-    //        Application.SetCompatibleTextRenderingDefault(false);
-    //        Application.Run(new Form1());
+    //        char[] originalSet = { 'A', 'B', 'C', 'D', 'E' };
+
+    //        Console.WriteLine("Các tập con:");
+    //        for (int i = 2; i <= originalSet.Length; i++)
+    //        {
+    //            List<List<char>> subsets = GenerateSubsets(originalSet, i);
+    //            foreach (var subset in subsets)
+    //            {
+    //                Console.WriteLine("{" + string.Join(",", subset) + "}");
+    //            }
+    //        }
     //    }
+
+
     //}
 }
