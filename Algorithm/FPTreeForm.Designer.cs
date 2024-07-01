@@ -50,8 +50,10 @@
             this.Text = "FPTreeForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FPTreeForm_Load);
-            this.SizeChanged += new System.EventHandler(this.FPTreeForm_SizeChanged);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FPTreeForm_Paint);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FPTreeForm_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FPTreeForm_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FPTreeForm_MouseUp);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

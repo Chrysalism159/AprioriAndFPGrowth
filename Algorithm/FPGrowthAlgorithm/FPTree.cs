@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace Algorithm.FPGrowthAlgorithm
 {
@@ -15,8 +16,6 @@ namespace Algorithm.FPGrowthAlgorithm
         //flist
         List<Item> frequentItems;
         List<List<string>> transaction;
-        private const int Radius = 20;
-        private const int Gap = 50;
 
         public List<Item> FrequentItems
         {
@@ -43,7 +42,7 @@ namespace Algorithm.FPGrowthAlgorithm
 
             //sắp xếp các giao dịch theo thứ tự trong flist
             List<string> aTransaction = new List<string>();
-            foreach(var trans in transaction)
+            foreach (var trans in transaction)
             {
                 aTransaction = trans;
                 InsertTransaction(aTransaction);
@@ -160,26 +159,7 @@ namespace Algorithm.FPGrowthAlgorithm
             }
             return sCount;
         }
-        private void PrintNode(Node node, int level)
-        {
-            if (node == null)
-                return;
 
-            // In nút hiện tại
-            string indent = new string(' ', level * 4);
-            Console.WriteLine(indent + (node.NameNode ?? "Root") + " (" + node.FpCount + ")");
-
-            // In các nút con
-            foreach (var child in node.Children)
-            {
-                PrintNode(child, level + 1);
-            }
-        }
-        public void PrintTree()
-        {
-            PrintNode(root, 0);
-        }
-        
         public FPTree Project(Item anItem)
         {
             FPTree tree = new FPTree();
@@ -191,7 +171,6 @@ namespace Algorithm.FPGrowthAlgorithm
             {
                 //Giá trị hỗ trợ của tập thường xuyên đang xét.
                 int projectedFPCount = startNode.FpCount;
-                Console.Write("\nSupport: " + projectedFPCount);
                 Node tempNode = startNode;
                 List<Node> aBranch = new List<Node>();
                 while (null != tempNode.Parent)
@@ -212,11 +191,12 @@ namespace Algorithm.FPGrowthAlgorithm
                     tempNode = tempNode.Parent;
                 }
                 //đảo ngược nhánh để gán vào gốc root
+
                 aBranch.Reverse();
                 tree.InsertBranch(aBranch);
                 startNode = startNode.NextHeader;
             }
-            
+
             IDictionary<string, Node> inFrequentHeaderTable = tree.headerTable.
                 Where(x => tree.GetTotalSupportCount(x.Value.NameNode) < minimumSupport).
                 ToDictionary(p => p.Key, p => p.Value);
@@ -256,7 +236,7 @@ namespace Algorithm.FPGrowthAlgorithm
             {
                 foreach (var trans in transaction)
                 {
-                    foreach(var item in trans)
+                    foreach (var item in trans)
                     {
                         if (item.Length == 0) continue;
                         if (dictionary.ContainsKey(item))

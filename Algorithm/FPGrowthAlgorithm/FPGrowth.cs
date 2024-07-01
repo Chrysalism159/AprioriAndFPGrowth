@@ -3,6 +3,7 @@ using Algorithm.Code;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,17 +13,13 @@ using System.Threading.Tasks;
 
 namespace Algorithm.FPGrowthAlgorithm
 {
-   public class FPGrowth
+    public class FPGrowth
     {
         private int min_conf;
         public FPTree fpTree;
         string fileOutputPath;
         List<List<string>> database;
         System.IO.StreamWriter file;
-        Font font = new Font("Arial", 12, FontStyle.Bold);
-        private const int Radius = 20;
-        private const int Gap = 50;
-
 
         public FPGrowth()
         {
@@ -34,79 +31,58 @@ namespace Algorithm.FPGrowthAlgorithm
             fpTree = tree;
             this.fileOutputPath = fileOutputPath;
         }
-        public int GenerateFrequentItemSets()
+        public void GenerateFrequentItemSets()
         {
             List<Item> frequentItems = fpTree.FrequentItems;
-            int totalFrequentItemSets = frequentItems.Count;
+            file.WriteLine("---------------------------------------------------------------------------------------------");
+            file.WriteLine("\nDanh sách các tập thường xuyên phát sinh\nTên danh mục\t\t\t\tĐộ hỗ trợ\n------------------------------------------------------------------");
             foreach (Item anItem in frequentItems)
             {
-                //Console.WriteLine("Frequent Item: " + anItem.nameItem);
-                file.WriteLine("---------------------------------------------------------------------------------------------");
-                file.WriteLine("\nTập thường xuyên phát sinh: " + anItem.nameItem + " -- Độ hỗ trợ: " + anItem.SupportCount);
-                Itemset anItemSet = new Itemset();
+                FP_Itemset anItemSet = new FP_Itemset();
                 anItemSet.AddItem(anItem);
-                //Console.WriteLine("Print itemset in GenFrequentItemset: ");
-                //anItemSet.Print();
-                totalFrequentItemSets += Mine(fpTree, anItemSet);
-                //Console.WriteLine(totalFrequentItemSets + " itemsets for " + anItem.nameItem);
+                Mine(fpTree, anItemSet);
             }
-            Console.WriteLine(totalFrequentItemSets);
-            return totalFrequentItemSets;
         }
         List<AssociationRule> associationRules = new List<AssociationRule>();
         private void PrintAssociateRule()
         {
-            
             //Console.WriteLine("---------------------------------------------------------------------------------------------");
             file.WriteLine("---------------------------------------------------------------------------------------------");
             //Console.WriteLine("RESULTS");
-            file.WriteLine("Dự đoán khả năng mua hàng của sản phẩm {A} khi mua sản phầm {B}");
+            file.WriteLine("**************************************");
             //Console.WriteLine("--------------------");
             file.WriteLine("--------------------");
+            associationRules = associationRules.OrderByDescending(m=>m.Support).ToList();
+            int i = 1;
             foreach (var rule in associationRules)
             {
                 //Console.WriteLine($"{string.Join(", ", rule.Rule.Item1)} --> {string.Join(", ", rule.Rule.Item2)}:  {rule.Support}");
-                file.WriteLine($"Khả năng mua hàng của [{string.Join(", ", rule.Rule.Item1)}] --> [{string.Join(", ", rule.Rule.Item2)}]:  {rule.Support}%");
+                file.WriteLine($"{i}. [{string.Join(", ", rule.Rule.Item1)}] --> [{string.Join(", ", rule.Rule.Item2)}]:  {rule.Support}%");
+                i++;
             }
         }
-        private int Mine(FPTree fpTree, Itemset anItemSet)
+        private void Mine(FPTree fpTree, FP_Itemset anItemSet)
         {
-            int minedItemSets = 0;
             FPTree projectedTree;
             projectedTree = fpTree.Project(anItemSet.GetLastItem());
-            minedItemSets = projectedTree.FrequentItems.Count;
-            file.WriteLine("\nTập thường xuyên khi duyệt nhánh: ");
             foreach (Item anItem in projectedTree.FrequentItems)
             {
-                Itemset nextItemSet = anItemSet.Clone();
+                FP_Itemset nextItemSet = anItemSet.Clone();
                 nextItemSet.AddItem(anItem);
                 List<string> freqItem = new List<string>();
                 foreach (var item in nextItemSet._itemset)
                 {
-                    file.Write( item.nameItem + ", ");
+                    file.Write($" {string.Join(", ", item.nameItem)}");
                     freqItem.Add(item.nameItem);
                 }
-                
-                int freqSup = GetGroupCountInItemSets(freqItem); 
-                file.WriteLine(" -- Support: " + freqSup);
-                nextItemSet.Print();
+
+                int freqSup = GetGroupCountInItemSets(freqItem);
+                file.WriteLine("\t\t\t\t\t" + freqSup);
                 List<AssociationRule> rules = new List<AssociationRule>();
                 rules = GenerateAssociationRules(freqItem);
                 associationRules.AddRange(rules);
-                ////Console.WriteLine("---------------------------------------------------------------------------------------------");
-                //file.WriteLine("---------------------------------------------------------------------------------------------");
-                ////Console.WriteLine("RESULTS");
-                //file.WriteLine("Dự đoán khả năng mua hàng của sản phẩm {A} khi mua sản phầm {B}");
-                ////Console.WriteLine("--------------------");
-                //file.WriteLine("--------------------");
-                //foreach (var rule in rules)
-                //{
-                //    //Console.WriteLine($"{string.Join(", ", rule.Rule.Item1)} --> {string.Join(", ", rule.Rule.Item2)}:  {rule.Support}");
-                //    file.WriteLine($"Khả năng mua hàng của [{string.Join(", ", rule.Rule.Item1)}] --> [{string.Join(", ", rule.Rule.Item2)}]:  {rule.Support}%");
-                //}
-                minedItemSets += Mine(projectedTree, nextItemSet);
+                Mine(projectedTree, nextItemSet);
             }
-            return minedItemSets;
         }
         public int GetGroupCountInItemSets(List<string> group)
         {
@@ -121,53 +97,64 @@ namespace Algorithm.FPGrowthAlgorithm
             return temp;
         }
         //chia cac tap thuong xuyen thanh cac tap con
-        static List<List<string>> GeneratePowerSet(List<string> set)
+        static Dictionary<TValue, TKey> ReverseDictionary<TKey, TValue>(Dictionary<TKey, TValue> dictionary)
         {
-            List<List<string>> subsets = new List<List<string>>();
-            subsets.Add(new List<string>()); // Thêm tập rỗng
+            return dictionary.ToDictionary(x => x.Value, x => x.Key);
+        }
+        //chia cac tap thuong xuyen thanh cac tap con
+        static Dictionary<string, string> GeneratePowerSet(List<string> set)
+        {
+            Dictionary<string, string> subrule = new Dictionary<string, string>();
+
+            // Tạo các tập con không chứa một phần tử
             foreach (var item in set)
             {
-                int subsetsCount = subsets.Count;
-                for (int i = 0; i < subsetsCount; i++)
-                {
-                    List<string> newSubset = new List<string>(subsets[i]);
-                    newSubset.Add(item);
-                    subsets.Add(newSubset);
-                }
+                List<string> subset = new List<string>(set);
+                subset.Remove(item);
+                string value = string.Join(",", subset);
+                subrule[item] = value;
             }
-            return subsets;
-        }
 
+            // Đảo ngược từ điển và thêm vào subrule nếu chưa tồn tại
+            Dictionary<string, string> other = ReverseDictionary(subrule);
+            foreach (KeyValuePair<string, string> pair in other)
+            {
+                if (!subrule.ContainsKey(pair.Key))
+                    subrule[pair.Key] = pair.Value;
+            }
+
+            return subrule;
+        }
         //ghep cac tap con thanh luat ket hop
         private List<AssociationRule> GenerateAssociationRules(List<string> itemset)
         {
+            //itemset = "a,b,c,d"
             List<AssociationRule> rules = new List<AssociationRule>();
             var subsets = GeneratePowerSet(itemset);
             int sup_XY = GetGroupCountInItemSets(itemset);
-            subsets.RemoveAt(0); // Loại bỏ tập rỗng
-            subsets.Remove(itemset); // Loại bỏ tập hợp chính nó
             foreach (var subset in subsets)
             {
-                string[] X = subset.ToArray();
-                int sup_X = GetGroupCountInItemSets(subset);
-                var remainingItems = itemset.Except(subset).ToList();
-                foreach (var item in remainingItems)
+                string[] X = subset.Key.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                List<string> xx = X.ToList();
+                int sup_X = 0;
+
+                sup_X = GetGroupCountInItemSets(xx);
+                double confX_Y = ((double)sup_XY / (double)sup_X) * 100;
+                confX_Y = Math.Round(confX_Y, 2);
+                if (confX_Y > this.min_conf)
                 {
-                    double confX_Y = ((double)sup_XY / (double)sup_X) * 100;
-                    confX_Y = Math.Round(confX_Y, 2);
-                    if (confX_Y > this.min_conf)
+                    List<string> a = X.ToList();
+                    rules.Add(new AssociationRule
                     {
-                        rules.Add(new AssociationRule
-                        {
-                            Support = confX_Y,
-                            Rule = new Tuple<List<string>, List<string>>(subset, new List<string> { item })
-                        });
-                    }
+                        Support = confX_Y,
+                        Rule = new Tuple<List<string>, List<string>>(a, new List<string> { subset.Value })
+                    });
                 }
+
             }
             return rules;
         }
-        public int RunAlgorithm(List<List<string>> data, float minSup, string path, int min_conf)
+        public void RunAlgorithm(List<List<string>> data, float minSup, string path, int min_conf)
         {
             associationRules = new List<AssociationRule>();
             database = data;
@@ -176,39 +163,24 @@ namespace Algorithm.FPGrowthAlgorithm
                 Console.WriteLine("Path is empty");
             FPTree _fpTree = new FPTree(data, minSup);
             fpTree = _fpTree;
-            int totalFrequentItemSets = GenerateFrequentItemSets();
+            file.WriteLine($"Độ hỗ trợ tối thiểu = {minSup}");
+            file.WriteLine($"Độ tin cậy tối thiểu  = {this.min_conf}%\n\n");
+            List<Item> frequentItems = fpTree.FrequentItems;
+            file.WriteLine("\n---------------------------------------------------------------------------------------------");
+            file.WriteLine("\nDanh sách các danh mục đơn thỏa mãn độ hỗ trợ tối thiểu\nTên danh mục\t\t\t\t\t\t\t\tĐộ hỗ trợ\n---------------------------------------------");
+            foreach (Item anItem in frequentItems)
+            {
+                //Console.WriteLine("Frequent Item: " + anItem.nameItem);
+                file.WriteLine(anItem.nameItem + "\t\t\t\t\t\t\t\t" + anItem.SupportCount);
+            }
+            GenerateFrequentItemSets();
             PrintAssociateRule();
             file.Close();
-            return totalFrequentItemSets;
         }
-        public void DrawTree(Node node, int left, int right, int top, Graphics g)
+
+        public bool CreateFileRead(string path)
         {
-            if (node == null) return;
-            int x = (left + right) / 2;
-            // Vẽ nút hiện tại
-            g.FillEllipse(Brushes.White, x - Radius, top, 2 * Radius, 2 * Radius);
-            g.DrawEllipse(Pens.Black, x - Radius, top, 2 * Radius, 2 * Radius);
-            g.DrawString(node.NameNode + " (" + node.FpCount + ")", font, Brushes.Black, x - 20, top + 8);
-            // Tính toán vị trí của các nút con
-            int childCount = node.Children != null ? node.Children.Count : 0;
-            int childGap = 200; // Khoảng cách cố định giữa các nút con
-            int childLeft = x - (childCount - 1) * childGap / 2;
-            int childRight = x + (childCount - 1) * childGap / 2;
-            // Vẽ các liên kết tới nút con và gọi đệ quy cho mỗi nút con
-            if (node.Children != null)
-            {
-                for (int i = 0; i < childCount; i++)
-                {
-                    int childX = childLeft + i * childGap;
-                    int childY = top + Gap * 2; // Dịch chuyển xuống dưới một dòng so với nút cha
-                    g.DrawLine(Pens.Black, x, top + Radius * 2, childX, childY);
-                    DrawTree(node.Children[i], childX - Radius, childX + Radius, top + Gap * 2, g);
-                }
-            }
-        }
-        public bool CreateFileRead(  string path)
-        {
-            if(path!=null)
+            if (path != null)
             {
                 try
                 {
@@ -227,5 +199,5 @@ namespace Algorithm.FPGrowthAlgorithm
             return false;
         }
     }
-    
+
 }

@@ -12,6 +12,8 @@ namespace Algorithm.FPGrowthAlgorithm
         int fpCount;
         Node nextHeader;
         Node parent;
+        public int PositionX { get; set; }
+        public int PositionY { get; set; }
 
         public Node Parent
         {
@@ -38,6 +40,10 @@ namespace Algorithm.FPGrowthAlgorithm
         {
             get { return fpCount; }
             set { fpCount = value; }
+        }
+        public void PrintNode()
+        {
+            Console.WriteLine("Name node: " + nameNode + " ------- value: " + fpCount);
         }
         private Node()
         {

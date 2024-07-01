@@ -12,4 +12,5 @@ namespace Algorithm.Base
         public Tuple<List<string>, List<string>> Rule { get; set; }
     }
 
+
 }

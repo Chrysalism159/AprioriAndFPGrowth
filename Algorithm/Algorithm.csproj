@@ -12,6 +12,22 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>D:\Study\KLTN\ProjectExe\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,12 +48,34 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>392FEF5B4C0719E4CF70F2DD0048868C4FE5A7A4</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Algorithm_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="GraphVizWrapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GraphViz.NET.1.0.0\lib\net40\GraphVizWrapper.dll</HintPath>
     </Reference>
+    <Reference Include="Guna.UI">
+      <HintPath>..\..\..\..\..\..\thuc tap lap trinh .net\Guna.UI-Framework-Lib-master\Guna.UI WinForms\.net 4.0\Guna.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Guna.UI2, Version=2.0.4.6, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
+      <HintPath>..\packages\Guna.UI2.WinForms.2.0.4.6\lib\net472\Guna.UI2.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,30 +90,115 @@
     <Compile Include="Base\AssociationRule.cs" />
     <Compile Include="Base\Data.cs" />
     <Compile Include="Base\ItemSets.cs" />
+    <Compile Include="ChuyenDoi_dl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChuyenDoi_dl.Designer.cs">
+      <DependentUpon>ChuyenDoi_dl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Formm\FormSuaCSDL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formm\FormSuaBang.Designer.cs">
+      <DependentUpon>FormSuaCSDL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formm\FormThemBang.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formm\FormThemBang.Designer.cs">
+      <DependentUpon>FormThemBang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formm\FormThemCSDL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formm\FormThemCSDL.Designer.cs">
+      <DependentUpon>FormThemCSDL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formm\FormXoaBang.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formm\FormXoaBang.Designer.cs">
+      <DependentUpon>FormXoaBang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formm\FormXoaCSDL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formm\FormXoaCSDL.Designer.cs">
+      <DependentUpon>FormXoaCSDL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTESTcs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTESTcs.Designer.cs">
+      <DependentUpon>FormTESTcs.cs</DependentUpon>
+    </Compile>
     <Compile Include="FPGrowthAlgorithm\FPGrowth.cs" />
     <Compile Include="FPGrowthAlgorithm\FPTree.cs" />
     <Compile Include="FPGrowthAlgorithm\Node.cs" />
-    <Compile Include="FPGrowthAlgorithm\Itemset.cs" />
+    <Compile Include="FPGrowthAlgorithm\FP_Itemset.cs" />
     <Compile Include="FPTreeForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FPTreeForm.Designer.cs">
       <DependentUpon>FPTreeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenF.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenF.Designer.cs">
+      <DependentUpon>OpenF.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AprioriAlgorithm\Apriori.cs" />
+    <Compile Include="ThemeColor.cs" />
+    <Compile Include="TSXdb.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TSXdb.Designer.cs">
+      <DependentUpon>TSXdb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TXL_dl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TXL_dl.Designer.cs">
+      <DependentUpon>TXL_dl.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ChuyenDoi_dl.resx">
+      <DependentUpon>ChuyenDoi_dl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Formm\FormSuaBang.resx">
+      <DependentUpon>FormSuaCSDL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formm\FormThemBang.resx">
+      <DependentUpon>FormThemBang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formm\FormThemCSDL.resx">
+      <DependentUpon>FormThemCSDL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formm\FormXoaBang.resx">
+      <DependentUpon>FormXoaBang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Formm\FormXoaCSDL.resx">
+      <DependentUpon>FormXoaCSDL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTESTcs.resx">
+      <DependentUpon>FormTESTcs.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FPTreeForm.resx">
       <DependentUpon>FPTreeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenF.resx">
+      <DependentUpon>OpenF.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -86,6 +209,14 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TSXdb.resx">
+      <DependentUpon>TSXdb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TXL_dl.resx">
+      <DependentUpon>TXL_dl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Algorithm_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -101,6 +232,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Database\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
